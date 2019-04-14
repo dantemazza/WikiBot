@@ -2,16 +2,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import WebDriverException
 import time
 
 # gmail: *********@gmail.com
 # twitter user: WikiBot2
 # password: *************
-
-username = "WikiBot2"
-password = "*************"
-browser = webdriver.Chrome('C:\\Users\\dante\\Downloads\\chromedriver_win32\\chromedriver')
-browser.get('https://twitter.com/login')
 
 userBar = browser.find_element_by_xpath("//div[@class='clearfix field']//input[@name='session[username_or_email]']")
 passBar = browser.find_element_by_xpath("//div[@class='clearfix field']//input[@name='session[password]']")
@@ -34,14 +30,13 @@ wikipedia = browser.window_handles[1]
 browser.switch_to.window(twitter)
 
 def generateWikiTweet(text, hashtag):
-    print(text)
     wikiChars = list(text)
     characters = []
     isInTag = False
     index = 0
     length = 0
     hashLength = len(hashtag)
-    while index < len(wikiChars) and length < 260-hashLength:
+    while index < len(wikiChars) and length < 250-hashLength:
         if length > 140:
             if characters[length - 1] == '.':
                 break
@@ -58,9 +53,6 @@ def generateWikiTweet(text, hashtag):
                 characters.append(wikiChars[index])
                 length += 1
         index += 1
-    print(length)
-    print(len(characters))
-    print(characters)
     if length > 2:
         characters.append(hashtag)
     return ''.join(characters)
@@ -79,7 +71,9 @@ def generateHashtag(title):
             if chars[i] == '(':
                 isInBrackets = True
             else:
-                if chars[i] != ' ' and chars[i] != '.' and chars[i] != "'" and chars[i] != '-' and chars[i] != ',':
+                if chars[i] == ',':
+                    hashChars.append(" #")
+                elif chars[i] != ' ' and chars[i] != '.' and chars[i] != "'" and chars[i] != '-':
                     hashChars.append(chars[i])
     return ''.join(hashChars)
 
@@ -110,10 +104,15 @@ def deployWikiTweet():
 
 for i in range(1,303):
     try:
-        deployWikiTweet()
-        time.sleep(0.25)
-    except NoSuchElementException:
-        browser.switch_to.window(twitter)
+        try:
+            deployWikiTweet()
+            time.sleep(0.25)
+        except NoSuchElementException:
+            browser.switch_to.window(twitter)
+            print("NoSuchElementException")
+    except WebDriverException:
+        print("WebDriverException")
+
 
 
 
