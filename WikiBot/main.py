@@ -33,24 +33,55 @@ wikipedia = browser.window_handles[1]
 
 browser.switch_to.window(twitter)
 
-def generateWikiTweet(text):
+def generateWikiTweet(text, hashtag):
+    print(text)
     wikiChars = list(text)
     characters = []
     isInTag = False
     index = 0
     length = 0
-    while not(length > 140 and characters[length - 1] == '.') and index < len(wikiChars) and (length < 250):
+    hashLength = len(hashtag)
+    while index < len(wikiChars) and length < 260-hashLength:
+        if length > 140:
+            if characters[length - 1] == '.':
+                break
         if isInTag:
-            if wikiChars[index] == '>' or wikiChars[index] == ']' or wikiChars[index] == ';':
+            if wikiChars[index] == '>' or wikiChars[index] == ']':
                 isInTag = False
         else:
-            if wikiChars[index] == '<' or wikiChars[index] == '[' or wikiChars[index] == '&':
+            if wikiChars[index] == '&':
+                index +=6
+                continue
+            if wikiChars[index] == '<' or wikiChars[index] == '[':
                 isInTag = True
             else:
                 characters.append(wikiChars[index])
                 length += 1
         index += 1
+    print(length)
+    print(len(characters))
+    print(characters)
+    if length > 2:
+        characters.append(hashtag)
     return ''.join(characters)
+
+def generateHashtag(title):
+    chars = list(title)
+    hashChars = [' #']
+    length = len(chars)
+    isInBrackets = False
+
+    for i in range(0, length):
+        if isInBrackets:
+            if chars[i] == ')':
+                isInBrackets = False
+        else:
+            if chars[i] == '(':
+                isInBrackets = True
+            else:
+                if chars[i] != ' ' and chars[i] != '.' and chars[i] != "'" and chars[i] != '-' and chars[i] != ',':
+                    hashChars.append(chars[i])
+    return ''.join(hashChars)
 
 def deployWikiTweet():
     browser.switch_to.window(wikipedia)
@@ -59,7 +90,10 @@ def deployWikiTweet():
 
     text = browser.find_element_by_xpath("//p").get_attribute('innerHTML')
 
-    tweet = generateWikiTweet(text)
+    title = browser.find_element_by_xpath("//h1").get_attribute('innerHTML')
+    titleMinusHTML = generateWikiTweet(title, "")
+    hashtag = generateHashtag(titleMinusHTML)
+    tweet = generateWikiTweet(text, hashtag)
 
     browser.switch_to.window(twitter)
     tweetBox = browser.find_element_by_xpath("//div[@class='tweet-box rich-editor']//div")
