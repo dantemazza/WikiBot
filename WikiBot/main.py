@@ -41,10 +41,10 @@ def generateWikiTweet(text):
     length = 0
     while not(length > 140 and characters[length - 1] == '.') and index < len(wikiChars) and (length < 250):
         if isInTag:
-            if wikiChars[index] == '>' or wikiChars[index] == ']' or wikiChars[index] == '&':
+            if wikiChars[index] == '>' or wikiChars[index] == ']' or wikiChars[index] == ';':
                 isInTag = False
         else:
-            if wikiChars[index] == '<' or wikiChars[index] == '[' or wikiChars[index] == ';':
+            if wikiChars[index] == '<' or wikiChars[index] == '[' or wikiChars[index] == '&':
                 isInTag = True
             else:
                 characters.append(wikiChars[index])
