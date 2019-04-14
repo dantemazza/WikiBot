@@ -4,7 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException
 import time
 
-# gmail: fabrosario7@gmail.com
+# gmail: *********@gmail.com
 # twitter user: WikiBot2
 # password: *************
 
