@@ -120,8 +120,8 @@ def deployWikiTweet():
     tweetButton.click()
 
 #twitter appears to have a semi-hourly limit of 300 tweets - the settings below are configured accordingly for a day
-for k in range(0,8):
-    for i in range(0,300):
+for k in range(9):
+    for i in range(301):
         try:
             try:
                 deployWikiTweet()
