@@ -34,7 +34,7 @@ wikipedia = browser.window_handles[1]
 browser.switch_to.window(twitter)
 startTweets = browser.find_element_by_xpath("//span[@class='ProfileCardStats-statValue']").get_attribute('innerHTML')
 startTweets = startTweets.replace(',', '')
-print("Current tweet count: " + startTweets)
+print(f"Current tweet count: {startTweets}")
 def generateWikiTweet(text, hashtag):
     wikiChars = list(text)
     characters = []
@@ -142,6 +142,6 @@ endTweets = endTweets.replace(',', '')
 totalTweets = int(endTweets) - int(startTweets)
 avg = totalTweets / (end-start) * 60
 
-print(str(totalTweets) + " tweets were generated at an average rate of " + str(avg)[0:4] + " tweets per minute.")
+print(f"{totalTweets} tweets were generated at an average rate of " + str(avg)[0:4] + " tweets per minute.")
 browser.quit()
 
